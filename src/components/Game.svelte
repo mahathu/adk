@@ -13,10 +13,6 @@
 
 	let players = [];
 
-	function handleKeydown(e){
-		//console.log(e.key + ' : ' + e.keyCode);
-	}
-
 	function addPlayer(){
 		let id = players.length == 0 ? 1 : Math.max(...players.map(p => p.id)) + 1;
 		let name = `Player ${id}`;
@@ -51,8 +47,6 @@
 		startGame();
 	});
 </script>
-
-<svelte:window on:keydown={handleKeydown}/>
 
 <div class="flex">
 	<canvas 

@@ -9,6 +9,25 @@ export default class Game {
         this.width = ctx.canvas.clientWidth;
         this.height = ctx.canvas.clientHeight;
 
+        document.addEventListener('keydown', e => {
+            for (const player of this.players.filter(p => p.alive)){
+                if (e.key === player.keyL){
+                    player.snake.turningLeft = true;
+                } else if (e.key === player.keyR){
+                    player.snake.turningRight = true;
+                }
+            }
+        });
+        document.addEventListener('keyup', e => {
+            for (const player of this.players.filter(p => p.alive)){
+                if (e.key === player.keyL){
+                    player.snake.turningLeft = false;
+                } else if (e.key === player.keyR){
+                    player.snake.turningRight = false;
+                }
+            }
+        });
+
         this.startRound();
     }
 
