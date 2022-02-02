@@ -31,18 +31,12 @@ export default class Snake extends Path2D{
 
         // UPDATE ANGLE
         if(this.turningLeft != this.turningRight){ //currently turning
-            if(
-                this.ang - this.angBeforeSegmentStart == 0 || // turn start
+            if( 
+                this.ang - this.angBeforeSegmentStart == 0 || // new turn
                 Math.abs(this.ang - this.angBeforeSegmentStart) > this.MAX_ROTATE_BEFORE_NEW_HITLINE // long turn -> new hitline
-            ){
-                // save angle to keep track of when a new segment is needed
-                this.angBeforeSegmentStart = this.ang;
-
-                this.hitlines[this.hitlines.length - 1].x1 = this.posX;
-                this.hitlines[this.hitlines.length - 1].y1 = this.posY;
-                this.hitlines.push(new Line(this.posX, this.posY, this.posX, this.posY));
-            }
+            ){ this.createNewHitline(); }
             
+            // update the snake's angle:
             let fct = this.turningRight ? -1 : 1;
             this.ang += fct * this.rotateAng * dt;
         }
@@ -62,5 +56,19 @@ export default class Snake extends Path2D{
             this.posY < this.lineWidth/3 || this.posY > canvasHeight - this.lineWidth/3
         ) { return true; }
         return false;
+    }
+
+    createNewHitline(){
+        /** save angle to keep track of when a new segment is needed. 
+         * Once the new angle becomes too different to angBeforeSegmentStart,
+         * a new hitline will be created. */
+        this.angBeforeSegmentStart = this.ang;
+
+        // Set the end coordinates of the last hitline to the current position:
+        this.hitlines[this.hitlines.length - 1].x1 = this.posX;
+        this.hitlines[this.hitlines.length - 1].y1 = this.posY;
+
+        // Add a new hitline, starting at the current coordinates.
+        this.hitlines.push(new Line(this.posX, this.posY, this.posX, this.posY));
     }
 }
