@@ -5,8 +5,8 @@ export default class Snake extends Path2D{
         this.posX = posX;
         this.posY = posY;
         this.ang = ang;
-        this.speed = .2;
-        this.lineWidth = 5;
+        this.speed = .1;
+        this.lineWidth = 2.5;
     }
 
     updatePosition(dt) {

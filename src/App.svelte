@@ -2,9 +2,9 @@
     import Game from './components/Game.svelte';
     
     let defaultPlayers = [
-		{ color: '#E6CC83', keyL: 'q', keyR: 'w' },
-		{ color: '#85CADD', keyL: 'ArrowLeft', keyR: 'ArrowRight' },
-		{ color: '#D2565C', keyL: 'x', keyR: 'c' },
+		{ color: '#F8CA00', keyL: 'q', keyR: 'w' },
+		{ color: '#1AD2F2', keyL: 'ArrowLeft', keyR: 'ArrowRight' },
+		{ color: '#FD0123', keyL: 'x', keyR: 'c' },
 		{ color: '#2A2A2A', keyL: 'i', keyR: 'o' },
 	];
 </script>
