@@ -33,7 +33,7 @@ export default class Game {
 
     startRound() {
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.roundStartTime = Date.now();
+        this.roundStartTime = performance.now();
 
         this.roundsPlayed++;
         console.log("Started round "+this.roundsPlayed);
@@ -48,24 +48,40 @@ export default class Game {
             p['alive'] = true;
         });
 
-        window.requestAnimationFrame(() => {this.update(Date.now())});
+        window.requestAnimationFrame(() => {this.update(performance.now())});
     }
 
     update(last_frame){
-		let now = Date.now();
-
-		let dt = now-last_frame;
-		last_frame = now;
+		const now = performance.now();
+		const dt = now-last_frame;
 
         for (const player of this.players.filter(p => p.alive)){
             player.snake.updatePosition(dt);
+
             player.alive = !player.snake.checkIfOutOfBounds(this.width, this.height);
+
+            for(const otherPlayer of this.players){ //otherSnake <- snake to which collisions are compared
+                if( player.snake.collidesWith(otherPlayer.snake) ){
+                    console.log(player.color + " crashed into "+otherPlayer.color);
+                    player.alive = false;
+                }
+            }
 
             this.ctx.lineWidth = player.snake.lineWidth;
             this.ctx.strokeStyle = player.color;
             this.ctx.stroke(player.snake);
         }
-        
-		window.requestAnimationFrame(() => {this.update(last_frame)});
+
+        // ineffectivelydraw hitlines (just for debugging)
+        // this.ctx.strokeStyle = 'red';
+        // for (const hitlines of this.players.map(p => p.snake.hitlines)){
+        //     this.ctx.moveTo(hitlines[0].x0, hitlines[0].y0);
+        //     for (const line of hitlines){
+        //         this.ctx.lineTo(line.x1, line.y1);
+        //     }
+        // }
+        // this.ctx.stroke();
+
+		window.requestAnimationFrame(() => {this.update(now)});
     }
 }

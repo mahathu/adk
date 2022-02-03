@@ -1,3 +1,5 @@
+import { distance } from './util.js';
+
 class Line {
     constructor(x0, y0, x1, y1) {
         this.x0 = x0;
@@ -11,11 +13,13 @@ export default class Snake extends Path2D{
     constructor(posX, posY, ang) {
         super();
 
+        this.seed = Math.random();
         this.posX = posX;
         this.posY = posY;
-        this.ang = 1;
+        this.ang = ang;
         this.angBeforeSegmentStart = this.ang;
-        this.MAX_ROTATE_BEFORE_NEW_HITLINE = Math.PI * 2 / 16; //TODO: make this global variable
+
+        this.MAX_ROTATE_BEFORE_NEW_HITLINE = Math.PI * 2 / 10; //10 segments per circle //TODO: make this global variable
         this.hitlines = [ new Line(this.posX, this.posY, this.posX, this.posY) ]; //end coords will be continuously updated
 
         this.turningLeft = false;
@@ -45,8 +49,38 @@ export default class Snake extends Path2D{
         this.posX += dt * this.speed * Math.sin(this.ang);
         this.posY += dt * this.speed * Math.cos(this.ang);
 
+        // UPDATE HITBOXES
+        // modify the end coordinate of the current (last) hitline:
+        this.hitlines[this.hitlines.length - 1].x1 = this.posX;
+        this.hitlines[this.hitlines.length - 1].y1 = this.posY;
+
+        if(this.turningLeft == this.turningRight && this.angBeforeSegmentStart != this.ang){ // just stopped turning
+            this.angBeforeSegmentStart = this.ang;
+            // add a new hitline, now that the line is straight again.
+            // otherwise, hitline won't line up with the snake after it stopped turning
+            this.hitlines.push(new Line(this.posX, this.posY, this.posX, this.posY));
+        }
+
         this.moveTo(...oldPos);
         this.lineTo(this.posX, this.posY);
+    }
+
+    collidesWith(otherSnake){
+        let coll_hitlines = otherSnake.hitlines;
+
+        //TODO: fix this comparison (it works, but is ugly)
+        if(otherSnake.seed == this.seed){
+            // testing snake collisions with itseslf
+            coll_hitlines = coll_hitlines.slice(0, -5);
+        }
+
+        for(const hl of coll_hitlines){
+            if(distance(this.posX, this.posY, hl) < otherSnake.lineWidth/2){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     checkIfOutOfBounds(canvasWidth, canvasHeight) {

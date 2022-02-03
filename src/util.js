@@ -43,3 +43,33 @@ export function getRandomSpawn(canvasWidth, canvasHeight, players) {
     
     return [x, y, randFromInterval(0, Math.PI)];
 }
+
+export function distance(x, y, line) {
+    let A = x - line.x0;
+    let B = y - line.y0;
+    let C = line.x1 - line.x0;
+    let D = line.y1 - line.y0;
+
+    let dot = A * C + B * D;
+    let len_sq = C * C + D * D;
+    let param = -1;
+    if (len_sq != 0) //in case of 0 length line
+        param = dot / len_sq;
+
+    let xx, yy;
+
+    if (param < 0) {
+        xx = line.x0;
+        yy = line.y0;
+    } else if (param > 1) {
+        xx = line.x1;
+        yy = line.y1;
+    } else {
+        xx = line.x0 + param * C;
+        yy = line.y0 + param * D;
+    }
+
+    let dx = x - xx;
+    let dy = y - yy;
+    return Math.sqrt(dx * dx + dy * dy);
+}
