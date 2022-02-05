@@ -2,17 +2,25 @@
     import { createEventDispatcher } from "svelte";
     import { getKeyRepresentation } from "../util";
     export let player;
+    export let gameActive;
 
     const dispatch = createEventDispatcher();
 </script>
 
 <div class="text-xl flex">
-    <input type="color" value={player.color}>
-    <input type="text" class="player-name grow" value={player.name} size="1" maxlength="15">
-    <div class="flex">
+    <input type="color" bind:value={player.color} disabled={gameActive}>
+    <input type="text" class="player-name grow" 
+            bind:value={player.name}
+            disabled={gameActive}
+            size="1" maxlength="15">
+    <div class="flex player-ctrl-btns text-center font-bold font-mono">
         <div class="w-6">{getKeyRepresentation(player.keyL)}</div>
         <div class="w-6">{getKeyRepresentation(player.keyR)}</div>
-        <button on:click={() => dispatch('remove', player)}>X</button>
+        <button
+            class="px-1"
+            on:click={() => dispatch('remove', player)}
+            disabled={gameActive}
+        >X</button>
     </div>
 </div>
 
@@ -41,5 +49,15 @@
         border: none;
         cursor: pointer;
         transition: .075s;
+    }
+    .player-name:disabled{
+        color: inherit;
+        background: inherit;
+    }
+    input:disabled{
+        cursor: default;
+    }
+    .player-ctrl-btns > *{
+        line-height: 30px;
     }
 </style>

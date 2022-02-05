@@ -18,7 +18,8 @@
 	const CANVAS_WIDTH = 660;
 	const CANVAS_HEIGHT = 560;
 
-	let ctx;
+	let ctx, game;
+	let gameActive = false;
 
 	export let defaultPlayers = [];
 
@@ -45,7 +46,8 @@
 	}
 
 	function startGame(){
-		let game = new Game(ctx, players);
+		game = new Game(ctx, players);
+		gameActive = true;
 	}
 
 	onMount(() => {
@@ -57,8 +59,6 @@
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
-		startGame();
 	});
 </script>
 
@@ -72,13 +72,13 @@
 
 	<div class="ml-5 grow space-y-3">
 		{#each players as player (player.id)}
-		<Player {player}
+		<Player {player} {gameActive}
 			on:remove={e => removePlayer(e.detail)}
 		/>
 		{/each}
 
-		<button class="border-2 border-current px-1" on:click={addPlayer} disabled={players.length >= MAX_PLAYERS}>Add Player</button>
-		<button class="border-2 border-current px-1" on:click={startGame} disabled={players.length < 2}>Start Game</button>
+		<button class="border-2 border-current px-1" on:click={addPlayer} disabled={gameActive || players.length >= MAX_PLAYERS}>Add Player</button>
+		<button class="border-2 border-current px-1" on:click={startGame} disabled={gameActive || players.length < 2}>Start Game</button>
 	</div>
 </div>
 

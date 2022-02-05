@@ -79,7 +79,7 @@ export default class Game {
             this.ctx.fillText(msg, 10, (i+1)*30);
         });
 
-        
+        this.ctx.fillText("Press [space] to continue", 10, this.height-20);
     }
 
     /** remove a player from the current round,
