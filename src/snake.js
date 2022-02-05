@@ -30,7 +30,7 @@ export default class Snake extends Path2D{
         this.lineWidth = 2.5;
     }
 
-    updatePosition(dt) {
+    updatePosition(dt, freezeTime) {
         let oldPos = [this.posX, this.posY];
 
         // UPDATE ANGLE

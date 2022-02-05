@@ -50,19 +50,27 @@ export default class Game {
 
         this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-        this.players.map((p, i) => {
+        this.players.forEach((p, i) => {
             let initialPos = getRandomSpawn(
                 this.canvasWidth, 
                 this.canvasHeight, 
                 this.players.slice(0,i) // only consider players that already have a snake
             );
             p['snake'] = new Snake(...initialPos);
+            p['pointsReceived'] = 0;
             p['alive'] = true;
         });
 
-        this.roundStartTime = performance.now();
-        this.lastUpdate = this.roundStartTime;
-        this.gameLoop = window.requestAnimationFrame((ts) => this.update(ts));
+        this.players.forEach(p => {
+            p.snake.lineTo(p.snake.posX, p.snake.posY);
+            this.ctx.lineWidth = 6;
+            this.ctx.strokeStyle = p.color;
+            this.ctx.stroke(p.snake);
+        });
+        window.setTimeout(() => {
+            this.lastUpdate = performance.now();
+            this.gameLoop = window.requestAnimationFrame((ts) => this.update(ts));
+        }, 1500);
     }
 
     endRound() {
@@ -77,7 +85,8 @@ export default class Game {
         this.players
         .sort((a, b) => b.score - a.score)
         .forEach((p, i) => {
-            let msg = `${p.name}: ${p.score}`;
+            let msg = `${p.name}: ${p.score}` 
+                + (p.pointsReceived > 0 ? ` (+${p.pointsReceived})` : '');
             this.ctx.fillText(msg, 10, (i+1)*30);
         });
 
@@ -90,7 +99,10 @@ export default class Game {
     killPlayer(p) {
         p.alive = false;
         
-        this.players.filter(p => p.alive).map(p => p.score++);
+        this.players.filter(p => p.alive).forEach(p => {
+            p.score++;
+            p.pointsReceived++;
+        });
 
         if( this.players.filter(p => p.alive).length <= 1 ) {
             this.endRound();
@@ -99,10 +111,9 @@ export default class Game {
     }
 
     update(now){
-
 		const dt = now - this.lastUpdate;
         this.lastUpdate = now;
-        
+
         // Update player positions and draw them:
         for (const player of this.players.filter(p => p.alive)){
             player.snake.updatePosition(dt);
