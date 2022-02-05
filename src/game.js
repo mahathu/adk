@@ -6,9 +6,11 @@ export default class Game {
         this.roundsPlayed = 0;
         this.roundActive = false;
         this.players = players;
+        this.winScore = (players.length-1) * 10; // first to 10 round
+
         this.ctx = ctx;
-        this.width = ctx.canvas.clientWidth;
-        this.height = ctx.canvas.clientHeight;
+        this.canvasWidth = ctx.canvas.clientWidth;
+        this.canvasHeight = ctx.canvas.clientHeight;
 
         document.addEventListener('keydown', e => {
             if(e.key === ' '){ // spacebar
@@ -46,12 +48,12 @@ export default class Game {
         this.roundsPlayed++;
         console.log("Started round "+this.roundsPlayed);
 
-        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
         this.players.map((p, i) => {
             let initialPos = getRandomSpawn(
-                this.width, 
-                this.height, 
+                this.canvasWidth, 
+                this.canvasHeight, 
                 this.players.slice(0,i) // only consider players that already have a snake
             );
             p['snake'] = new Snake(...initialPos);
@@ -79,7 +81,7 @@ export default class Game {
             this.ctx.fillText(msg, 10, (i+1)*30);
         });
 
-        this.ctx.fillText("Press [space] to continue", 10, this.height-20);
+        this.ctx.fillText("Press [space] to continue", 10, this.canvasHeight-20);
     }
 
     /** remove a player from the current round,
@@ -110,7 +112,7 @@ export default class Game {
             this.ctx.stroke(player.snake);
 
             // Check if any player went out of bounds
-            if (player.snake.outOfBounds(this.width, this.height)){
+            if (player.snake.outOfBounds(this.canvasWidth, this.canvasHeight)){
                 this.killPlayer(player);
                 continue;
             }

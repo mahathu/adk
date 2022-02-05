@@ -4,9 +4,9 @@ export function randFromInterval(min, max){
 
 export function getKeyRepresentation(key){
     if(key === 'ArrowLeft') {
-        return '◁';
+        return '<';
     } else if(key === 'ArrowRight') {
-        return '▷';
+        return '>';
     }
     return key.toUpperCase();
 }

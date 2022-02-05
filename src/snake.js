@@ -25,8 +25,8 @@ export default class Snake extends Path2D{
         this.turningLeft = false;
         this.turningRight = false;
 
-        this.speed = .15;
-        this.rotateAng = Math.PI / (360*2.5);
+        this.speed = .115;
+        this.rotateAng = Math.PI / (360*2);
         this.lineWidth = 2.5;
     }
 
