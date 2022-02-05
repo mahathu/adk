@@ -13,14 +13,16 @@
             bind:value={player.name}
             disabled={gameActive}
             size="1" maxlength="15">
-    <div class="flex player-ctrl-btns text-center font-bold font-mono">
+    <div class="flex items-center text-center font-bold font-mono">
         <div class="w-6">{getKeyRepresentation(player.keyL)}</div>
         <div class="w-6">{getKeyRepresentation(player.keyR)}</div>
         <button
-            class="px-1"
+            class="rm-btn text-gray-500 border-gray-500
+            hover:text-gray-600 hover:border-gray-600
+            transition duration-75 rounded-full"
             on:click={() => dispatch('remove', player)}
-            disabled={gameActive}
-        >X</button>
+          disabled={gameActive}
+        >×</button>
     </div>
 </div>
 
@@ -57,7 +59,9 @@
     input:disabled{
         cursor: default;
     }
-    .player-ctrl-btns > *{
-        line-height: 30px;
+    .rm-btn{
+        width: 22px;
+        height: 22px;
+        line-height: 20px;
     }
 </style>

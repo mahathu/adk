@@ -5,6 +5,7 @@ html, body {
 }
 
 body {
+	background: rgb(203 213 225);
 	color: #333;
 	margin: 0;
 	padding: 0;
@@ -54,10 +55,6 @@ button {
 
 button:disabled {
 	color: #999;
-}
-
-button:not(:disabled):active {
-	background-color: #ddd;
 }
 
 button:focus {

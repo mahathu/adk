@@ -84,11 +84,14 @@
 		</div>
 
 		<div>
-			<button class="border-2 border-current w-full" disabled={gameActive}>More Options</button>
-			<button class="w-full mt-2 bg-green-500 border-none transition shadow-green-700 shadow-sm 
-				hover:shadow-md 
-				hover:shadow-green-700 
-				py-2 text-lg text-white" on:click={startGame} disabled={gameActive || players.length < 2}>Start Game</button>
+			<button class="border-2 border-current w-full" disabled>More Options (coming soon™)</button>
+			<button class="w-full mt-2 transition border-2
+				bg-blue-700
+				border-blue-700
+				hover:shadow-sm hover:shadow-blue-700
+				active:bg-blue-800 active:border-blue-800
+				disabled:shadow-none disabled:bg-transparent disabled:border-current
+				py-2 text-lg text-white" on:click={startGame} disabled={gameActive || players.length < 2}>{gameActive ? "Game is Active" : "Start Game"}</button>
 		</div>
 	</div>
 </div>
