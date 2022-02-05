@@ -4,8 +4,8 @@
     export let player;
 
     const dispatch = createEventDispatcher();
-
 </script>
+
 <div class="text-xl flex">
     <input type="color" value={player.color}>
     <input type="text" class="player-name grow" value={player.name} size="1" maxlength="15">

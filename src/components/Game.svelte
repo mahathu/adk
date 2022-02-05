@@ -1,4 +1,15 @@
 <script>
+	/**
+	 * TODOS
+	 * add high contrast mode
+	 * add more settings (rotation angle, speed)
+	 * add mode that incrementally speeds up snakes each round
+	 * add FPS counter
+	 * improve scoreboard between rounds, blur background
+	 * make player OOP
+	 * make controls customizable
+	 * disable buttons while game/round is active
+	*/
 	import { onMount } from "svelte";
 	import Game from "../game";
 	import Player from "./Player.svelte";
@@ -19,12 +30,14 @@
 		let color = '#ff0000';
 		let keyL = '_';
 		let keyR = '_';
+		let score = 0;
+
 		if( id <= defaultPlayers.length ) {
 			color = defaultPlayers[id-1]['color'];
 			keyL = defaultPlayers[id-1]['keyL'];
 			keyR = defaultPlayers[id-1]['keyR'];
 		}
-		players = [...players, { id, name, color, keyL, keyR }];
+		players = [...players, { id, name, color, keyL, keyR, score }];
 	}
 
 	function removePlayer(player) {
@@ -36,6 +49,7 @@
 	}
 
 	onMount(() => {
+		addPlayer();
 		addPlayer();
 		addPlayer();
 		

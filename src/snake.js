@@ -25,7 +25,7 @@ export default class Snake extends Path2D{
         this.turningLeft = false;
         this.turningRight = false;
 
-        this.speed = .1;
+        this.speed = .15;
         this.rotateAng = Math.PI / (360*2.5);
         this.lineWidth = 2.5;
     }
@@ -65,7 +65,10 @@ export default class Snake extends Path2D{
         this.lineTo(this.posX, this.posY);
     }
 
-    collidesWith(otherSnake){
+    collidesWith(otherSnake){ // doesn't work at high speeds!
+        // TODO: fix this by instead checking for intersection
+        // between the latest hitline of this snake and the other
+        // sections, instead of comparing the current position
         let coll_hitlines = otherSnake.hitlines;
 
         //TODO: fix this comparison (it works, but is ugly)
@@ -83,7 +86,7 @@ export default class Snake extends Path2D{
         return false;
     }
 
-    checkIfOutOfBounds(canvasWidth, canvasHeight) {
+    outOfBounds(canvasWidth, canvasHeight) {
         // lineWidth multiplied by 1/3 to make hit detection more forgiving
         if( 
             this.posX < this.lineWidth/3 || this.posX > canvasWidth - this.lineWidth/3 ||

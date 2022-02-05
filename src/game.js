@@ -4,12 +4,17 @@ import { getRandomSpawn } from "./util.js";
 export default class Game {
     constructor(ctx, players) {
         this.roundsPlayed = 0;
+        this.roundActive = false;
         this.players = players;
         this.ctx = ctx;
         this.width = ctx.canvas.clientWidth;
         this.height = ctx.canvas.clientHeight;
 
         document.addEventListener('keydown', e => {
+            if(e.key === ' '){ // spacebar
+                this.startRound();
+            }
+
             for (const player of this.players.filter(p => p.alive)){
                 if (e.key === player.keyL){
                     player.snake.turningLeft = true;
@@ -32,11 +37,16 @@ export default class Game {
     }
 
     startRound() {
-        this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.roundStartTime = performance.now();
+        if(this.roundActive){
+            console.log("Game is already active");
+            return;
+        }
 
+        this.roundActive = true;
         this.roundsPlayed++;
         console.log("Started round "+this.roundsPlayed);
+
+        this.ctx.clearRect(0, 0, this.width, this.height);
 
         this.players.map((p, i) => {
             let initialPos = getRandomSpawn(
@@ -48,40 +58,74 @@ export default class Game {
             p['alive'] = true;
         });
 
-        window.requestAnimationFrame(() => {this.update(performance.now())});
+        this.roundStartTime = performance.now();
+        this.lastUpdate = this.roundStartTime;
+        this.gameLoop = window.requestAnimationFrame((ts) => this.update(ts));
     }
 
-    update(last_frame){
-		const now = performance.now();
-		const dt = now-last_frame;
+    endRound() {
+        this.roundActive = false;
+        console.log('round over');
+        cancelAnimationFrame(this.gameLoop);
 
+
+        this.ctx.font = '20px Arial';
+        this.ctx.fillStyle = "black";
+        
+        this.players
+        .sort((a, b) => b.score - a.score)
+        .forEach((p, i) => {
+            let msg = `${p.name}: ${p.score}`;
+            this.ctx.fillText(msg, 10, (i+1)*30);
+        });
+
+        
+    }
+
+    /** remove a player from the current round,
+     * award every other surviving snake a point,
+     * check if the round is over. */
+    killPlayer(p) {
+        p.alive = false;
+        
+        this.players.filter(p => p.alive).map(p => p.score++);
+
+        if( this.players.filter(p => p.alive).length <= 1 ) {
+            this.endRound();
+            return;
+        }
+    }
+
+    update(now){
+
+		const dt = now - this.lastUpdate;
+        this.lastUpdate = now;
+        
+        // Update player positions and draw them:
         for (const player of this.players.filter(p => p.alive)){
             player.snake.updatePosition(dt);
-
-            player.alive = !player.snake.checkIfOutOfBounds(this.width, this.height);
-
-            for(const otherPlayer of this.players){ //otherSnake <- snake to which collisions are compared
-                if( player.snake.collidesWith(otherPlayer.snake) ){
-                    console.log(player.color + " crashed into "+otherPlayer.color);
-                    player.alive = false;
-                }
-            }
 
             this.ctx.lineWidth = player.snake.lineWidth;
             this.ctx.strokeStyle = player.color;
             this.ctx.stroke(player.snake);
+
+            // Check if any player went out of bounds
+            if (player.snake.outOfBounds(this.width, this.height)){
+                this.killPlayer(player);
+                continue;
+            }
+
+            // Test for collisions
+            for(const otherPlayer of this.players){ //otherSnake <- snake to which collisions are compared
+                if( player.snake.collidesWith(otherPlayer.snake) ){
+                    this.killPlayer(player);
+                    break;
+                }
+            }
         }
 
-        // ineffectivelydraw hitlines (just for debugging)
-        // this.ctx.strokeStyle = 'red';
-        // for (const hitlines of this.players.map(p => p.snake.hitlines)){
-        //     this.ctx.moveTo(hitlines[0].x0, hitlines[0].y0);
-        //     for (const line of hitlines){
-        //         this.ctx.lineTo(line.x1, line.y1);
-        //     }
-        // }
-        // this.ctx.stroke();
-
-		window.requestAnimationFrame(() => {this.update(now)});
+        if(this.roundActive){ //i.e. more than 1 player still alive
+            this.gameLoop = window.requestAnimationFrame((ts) => this.update(ts));
+        }
     }
 }
