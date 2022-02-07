@@ -54,11 +54,12 @@
 	onMount(() => {
 		addPlayer();
 		addPlayer();
-		
+
 		ctx = document.getElementById('board').getContext('2d');
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+		startGame();
 	});
 </script>
 
@@ -73,7 +74,7 @@
 	<div class="ml-5 grow flex justify-between flex-col">
 		<div class="space-y-2">
 			<div class="flex justify-end">
-				<button class="border-2 border-current px-1" on:click={addPlayer} disabled={gameActive || players.length >= MAX_PLAYERS}>Add Player</button>
+				<button class="border border-current px-2" on:click={addPlayer} disabled={gameActive || players.length >= MAX_PLAYERS}>Add Player</button>
 			</div>
 
 			{#each players as player (player.id)}
@@ -84,12 +85,12 @@
 		</div>
 
 		<div>
-			<button class="border-2 border-current w-full" disabled>More Options (coming soon™)</button>
+			<button class="border border-current w-full" disabled>More Options (coming soon™)</button>
 			<button class="w-full mt-2 transition border-2
 				bg-blue-700
 				border-blue-700
 				hover:shadow-sm hover:shadow-blue-700
-				active:bg-blue-800 active:border-blue-800
+				active:bg-blue-800 active:border-blue-800 active:shadow-none
 				disabled:shadow-none disabled:bg-transparent disabled:border-current
 				py-2 text-lg text-white" on:click={startGame} disabled={gameActive || players.length < 2}>{gameActive ? "Game is Active" : "Start Game"}</button>
 		</div>
@@ -97,7 +98,7 @@
 </div>
 
 <style>
-	.start-btn{
+	/* .start-btn{
 		text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-	}
+	} */
 </style>

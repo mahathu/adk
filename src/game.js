@@ -70,7 +70,7 @@ export default class Game {
         window.setTimeout(() => {
             this.lastUpdate = performance.now();
             this.gameLoop = window.requestAnimationFrame((ts) => this.update(ts));
-        }, 1500);
+        }, 10);//}, 1500);
     }
 
     endRound() {

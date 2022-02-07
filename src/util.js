@@ -44,6 +44,10 @@ export function getRandomSpawn(canvasWidth, canvasHeight, players) {
     return [x, y, randFromInterval(0, Math.PI)];
 }
 
+export function intersects(l1, l2) {
+    return false;
+}
+
 export function distance(x, y, line) {
     let A = x - line.x0;
     let B = y - line.y0;

@@ -77,13 +77,7 @@ export default class Snake extends Path2D{
             coll_hitlines = coll_hitlines.slice(0, -5);
         }
 
-        for(const hl of coll_hitlines){
-            if(distance(this.posX, this.posY, hl) < otherSnake.lineWidth/2){
-                return true;
-            }
-        }
-
-        return false;
+        return coll_hitlines.some(hl => distance(this.posX, this.posY, hl) < otherSnake.lineWidth/2);
     }
 
     outOfBounds(canvasWidth, canvasHeight) {
