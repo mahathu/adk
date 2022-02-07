@@ -129,13 +129,21 @@ export default class Game {
             }
 
             // Test for collisions
-            for(const otherPlayer of this.players){ //otherSnake <- snake to which collisions are compared
-                if( player.snake.collidesWith(otherPlayer.snake) ){
-                    this.killPlayer(player);
-                    break;
-                }
+            if(this.players.some
+                    ( otherPlayer => player.snake.collidesWith(otherPlayer.snake) )){
+                this.killPlayer(player);
             }
         }
+
+        // draw hitlines (unoptimized, just for debug)
+        this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.ctx.strokeStyle = 'black';
+        this.players.forEach(p => {
+            this.ctx.beginPath();
+            this.ctx.moveTo(p.snake.hitlines[0].x0, p.snake.hitlines[0].y0);
+            p.snake.hitlines.forEach(hl => { this.ctx.lineTo(hl.x1, hl.y1); });
+            this.ctx.stroke();
+        });
 
         if(this.roundActive){ //i.e. more than 1 player still alive
             this.gameLoop = window.requestAnimationFrame((ts) => this.update(ts));

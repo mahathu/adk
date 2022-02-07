@@ -10,6 +10,7 @@
 	 * make player OOP
 	 * make controls customizable
 	 * disable buttons while game/round is active
+	 * add debug mode (auto start round, more players, disable out of board collisions)
 	*/
 	import { onMount } from "svelte";
 	import Game from "../game";
@@ -52,13 +53,13 @@
 	}
 
 	onMount(() => {
-		addPlayer();
-		addPlayer();
-
 		ctx = document.getElementById('board').getContext('2d');
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+		addPlayer();
+		addPlayer();
 		startGame();
 	});
 </script>
